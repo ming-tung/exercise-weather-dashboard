@@ -1,0 +1,80 @@
+{% extends "_base.html" %}
+<!--
+TODO extract sections to partials blocks, and make use of htmx to load them
+-->
+
+{% block main %}
+  <h1>Current Weather Data Insights</h1>
+  <section>
+    <form action="" method="get">
+      <label for="locations">Locations: (e.g. Berlin, DE; Hamburg, DE)</label>
+      <input type="text" id="locations" name="locations">
+      <input type="submit" value="Get Weather Insights" />
+    </form>
+    {% if locations %}
+      You are searching weather data for locations: {{ locations }}
+    {% endif %}
+  </section>
+
+  <section>
+    <div id="notification">
+      {{ notification }}
+    </div>
+  </section>
+
+  {% block weather_data_insights %}
+  <section>
+    <!-- TODO programmatically get the attributes -->
+    <div id="insights">
+      <div id="highest_temperature">
+        highest_temperature (Celsius): {{ insights.highest_temperature }}
+      </div>
+      <div id="cities_with_highest_temperature">
+        cities_highest_temperature (Celsius): {{ insights.cities_with_highest_temperature }}
+      </div>
+      <div id="lowest_humidity">
+        lowest_humidity (%): {{ insights.lowest_humidity }}
+      </div>
+      <div id="cities_with_lowest_humidity">
+        cities_lowest_humidity (%): {{ insights.cities_with_lowest_humidity }}
+      </div>
+      <div id="most_common_condition">
+        most_common_condition: {{ insights.most_common_condition }}
+      </div>
+    </div>
+  </section>
+  {% endblock %}
+
+  {% block weather_data_table %}
+  <table id="data-table" data-search="true">
+    <thead>
+    <tr>
+      <th scope="col" data-sortable="true">City</th>
+      <th scope="col" data-sortable="true">Temperature</th>
+      <th scope="col" data-sortable="true">Humidity</th>
+      <th scope="col" data-sortable="true">Condition</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for row in weather_data_list %}
+      <tr>
+        <td>{{ row.city_name }}, {{ row.country_code }}</td>
+        <td>{{ row.temperature }}</td>
+        <td>{{ row.humidity }}</td>
+        <td>{{ row.condition }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.2/dist/bootstrap-table.min.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.6/dist/bootstrap-table.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.6/dist/extensions/multiple-sort/bootstrap-table-multiple-sort.js"></script>
+  <script>
+      $(function() {
+          $('#data-table').bootstrapTable()
+      })
+  </script>
+  {% endblock %}
+
+{% endblock %}

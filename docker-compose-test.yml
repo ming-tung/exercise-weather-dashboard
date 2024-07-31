@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+  weather-service:
+    container_name: weather-service
+    build:
+      context: .
+      target: testing
+    image: weather-service
+    volumes:
+      - .:/src
+    ports:
+      - "8000:8000"
+    env_file: dev.env
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/health" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
